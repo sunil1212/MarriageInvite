@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "title": "Roopa & Anoop - Wedding",
+    "description": "Wedding invitation for Roopa & Anoop"
+  },
+  "splash": {
+    "sealNames": "Anu & Roopa",
+    "cta": "TAP HERE"
+  },
+  "couple": {
+    "bride": {
+      "name": "Roopa",
+      "label": "THE BRIDE",
+      "parents": "D/o Mr. B G Shivakumar & Mrs. Lakshmi Shivakumar",
+      "bio": "\"A soul full of grace, laughter, and endless kindness — she lights up every room she walks into.\""
+    },
+    "groom": {
+      "name": "Anoop",
+      "label": "THE GROOM",
+      "parents": "S/o Mr. Ashok A Goudar & Mrs. Jayashree Ashok",
+      "bio": "\"Grounded, warm, and fiercely loyal — the one who turns ordinary moments into memories.\""
+    }
+  },
+  "hero": {
+    "invocation": "|| Shree Ganeshaya Namah ||",
+    "intro": "We cordially invite you to witness the beginning of our forever and celebrate the wedding ceremony of",
+    "connector": "with"
+  },
+  "scratch": {
+    "label": "SCRATCH TO REVEAL",
+    "reveal": "You're invited to celebrate with us!"
+  },
+  "saveTheDate": {
+    "heading": "SAVE THE DATE",
+    "dates": "8th & 9th July 2026",
+    "countdownTarget": "2026-07-08T00:00:00+05:30"
+  },
+  "meetCouple": {
+    "heading": "Meet the Couple",
+    "videoUrl": "/assets/photos/couple-video.mp4",
+    "videoPoster": "/assets/photos/couple-poster.jpg"
+  },
+  "loveStory": {
+    "eyebrow": "OUR JOURNEY",
+    "heading": "Our Love Story",
+    "milestones": [
+      {
+        "icon": "envelope",
+        "title": "Where It All Began",
+        "body": "It started with a simple hello on Facebook Messenger — a message that would change everything.",
+        "chatPreview": "Hello"
+      },
+      {
+        "icon": "heart",
+        "title": "Building Our Story",
+        "body": "For two and a half beautiful years in India, friendship blossomed into something deeper — love found its home."
+      },
+      {
+        "icon": "plane",
+        "title": "Across Oceans",
+        "body": "When Roopa moved to the USA for her Master's, miles apart but hearts together — every call, every visit, every promise kept us going."
+      },
+      {
+        "icon": "ring",
+        "title": "Our Forever",
+        "body": "Through every high and low, we chose each other — again and again. Now we invite you to witness the beginning of our forever."
+      }
+    ]
+  },
+  "moments": {
+    "eyebrow": "CAPTURED MOMENTS",
+    "heading": "Moments of Love",
+    "slides": [
+      {
+        "src": "/assets/photos/moment-1.jpg",
+        "caption": "Our first pic together ❤️"
+      },
+      {
+        "src": "/assets/photos/moment-2.jpg",
+        "caption": "Radiant joy & endless laughter 😊"
+      },
+      {
+        "src": "/assets/photos/moment-3.jpg",
+        "caption": "Walking hand in hand into forever"
+      }
+    ]
+  },
+  "gallery": {
+    "caption": "Celebrating our love, today and always 👰‍♀️🤵"
+  },
+  "events": {
+    "heading": "Events Schedule",
+    "highlight": {
+      "title": "Wedding Ceremony",
+      "day": "THU",
+      "date": "July 9, 2026",
+      "time": "07:30 AM - 08:45 AM",
+      "venue": "Sapthapadi Palace, West of Chord Road, Rajajinagar, Bangalore",
+      "image": "/assets/photos/couple-traditional.jpg"
+    },
+    "items": [
+      {
+        "name": "Reception",
+        "tagline": "An evening of joy, music, and celebration",
+        "date": "WED · July 8, 2026",
+        "time": "07:15 PM onwards",
+        "venue": "Sapthapadi Palace, Bangalore"
+      }
+    ]
+  },
+  "presence": {
+    "heading": "Awaiting Your Noble Presence",
+    "sub": "Because meeting two souls requires twice the fun — and you!"
+  },
+  "families": {
+    "eyebrow": "WITH LOVE",
+    "heading": "The Families",
+    "groom": {
+      "label": "GROOM'S FAMILY",
+      "members": ["Mr. Ashok A Goudar", "Mrs. Jayashree Ashok"]
+    },
+    "bride": {
+      "label": "BRIDE'S FAMILY",
+      "members": ["Mr. G Shivakumar", "Mrs. Lakshmi Shivakumar"]
+    }
+  },
+  "venue": {
+    "eyebrow": "VENUE",
+    "heading": "Where We Celebrate",
+    "address": "Sapthapadi Palace, West of Chord Road, Rajajinagar, Bangalore, Karnataka",
+    "mapEmbed": "https://maps.google.com/maps?q=Sapthapadi+Palace,+Rajajinagar,+Bangalore&t=&z=15&ie=UTF8&iwloc=&output=embed",
+    "directionsUrl": "https://www.google.com/maps/dir/?api=1&destination=Sapthapadi+Palace,+Rajajinagar,+Bangalore"
+  },
+  "footer": {
+    "eyebrow": "WITH LOVE",
+    "names": "Roopa & Anoop",
+    "dates": "8th & 9th July 2026",
+    "hashtag": "#ANOOPWEDSROOPA"
+  },
+  "audio": {
+    "src": "/assets/audio/bg-music.mp3"
+  }
+}
