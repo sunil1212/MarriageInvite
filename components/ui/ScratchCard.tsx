@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
+const REVEAL_THRESHOLD = 0.3;
+
 type ScratchCardProps = {
   label: string;
   children: ReactNode;
@@ -24,10 +26,11 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
       ctx.globalCompositeOperation = "source-over";
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
-      ctx.fillStyle = "rgba(255,255,255,0.25)";
-      ctx.font = "600 11px Georgia, serif";
+      const fontSize = Math.min(20, Math.max(15, Math.round(width * 0.048)));
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.font = `600 ${fontSize}px Georgia, serif`;
       ctx.textAlign = "center";
-      ctx.fillText(label, width / 2, height / 2 + 4);
+      ctx.fillText(label, width / 2, height / 2 + fontSize * 0.15);
     },
     [label],
   );
@@ -76,7 +79,7 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
     for (let i = 3; i < imageData.data.length; i += 4) {
       if (imageData.data[i] === 0) cleared++;
     }
-    if (cleared / (width * height) > 0.45) {
+    if (cleared / (width * height) > REVEAL_THRESHOLD) {
       setRevealed(true);
     }
   };

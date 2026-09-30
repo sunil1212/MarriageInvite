@@ -27,7 +27,8 @@
     "connector": "with"
   },
   "scratch": {
-    "label": "SCRATCH TO REVEAL"
+    "label": "SCRATCH TO REVEAL",
+    "inviteLine": "You're invited to celebrate with us!"
   },
   "saveTheDate": {
     "heading": "SAVE THE DATE",

@@ -24,6 +24,9 @@ export function SaveTheDate() {
   return (
     <SectionShell className="invite-texture bg-cream">
       <div className="mx-auto max-w-md text-center">
+        <div className="mb-6 rounded-2xl bg-white/60 px-4 py-5 shadow-sm">
+          <p className="font-serif text-lg italic text-burgundy">{scratch.inviteLine}</p>
+        </div>
         <ScratchCard
           label={scratch.label}
           className="rounded-2xl shadow-md"
