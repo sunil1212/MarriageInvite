@@ -1,30 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
 type ScratchCardProps = {
   label: string;
-  revealText: string;
-  width?: number;
-  height?: number;
+  children: ReactNode;
+  className?: string;
 };
 
-export function ScratchCard({
-  label,
-  revealText,
-  width = 300,
-  height = 120,
-}: ScratchCardProps) {
+export function ScratchCard({ label, children, className = "" }: ScratchCardProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [revealed, setRevealed] = useState(false);
   const scratching = useRef(false);
+  const sizeRef = useRef({ width: 0, height: 0 });
 
   const drawOverlay = useCallback(
-    (ctx: CanvasRenderingContext2D) => {
+    (ctx: CanvasRenderingContext2D, width: number, height: number) => {
       const gradient = ctx.createLinearGradient(0, 0, width, height);
       gradient.addColorStop(0, "#d4a84b");
       gradient.addColorStop(0.5, "#c9a227");
       gradient.addColorStop(1, "#a88420");
+      ctx.globalCompositeOperation = "source-over";
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
       ctx.fillStyle = "rgba(255,255,255,0.25)";
@@ -32,22 +29,41 @@ export function ScratchCard({
       ctx.textAlign = "center";
       ctx.fillText(label, width / 2, height / 2 + 4);
     },
-    [label, width, height],
+    [label],
   );
 
-  useEffect(() => {
+  const syncCanvas = useCallback(() => {
+    const container = containerRef.current;
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!container || !canvas || revealed) return;
+
+    const { width, height } = container.getBoundingClientRect();
+    const w = Math.round(width);
+    const h = Math.round(height);
+    if (w < 1 || h < 1) return;
+
+    sizeRef.current = { width: w, height: h };
+    canvas.width = w;
+    canvas.height = h;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    canvas.width = width;
-    canvas.height = height;
-    drawOverlay(ctx);
-  }, [drawOverlay, width, height]);
+    drawOverlay(ctx, w, h);
+  }, [drawOverlay, revealed]);
+
+  useEffect(() => {
+    syncCanvas();
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new ResizeObserver(() => syncCanvas());
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [syncCanvas]);
 
   const scratch = (x: number, y: number) => {
     const canvas = canvasRef.current;
     if (!canvas || revealed) return;
+    const { width, height } = sizeRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     ctx.globalCompositeOperation = "destination-out";
@@ -67,6 +83,7 @@ export function ScratchCard({
 
   const pointerPos = (e: React.PointerEvent<HTMLCanvasElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
+    const { width, height } = sizeRef.current;
     const scaleX = width / rect.width;
     const scaleY = height / rect.height;
     return {
@@ -76,20 +93,12 @@ export function ScratchCard({
   };
 
   return (
-    <div
-      className="relative mx-auto overflow-hidden rounded-lg shadow-md"
-      style={{ width: "100%", maxWidth: width }}
-    >
-      <div
-        className="flex items-center justify-center bg-cream px-4 text-center font-serif text-burgundy"
-        style={{ minHeight: height }}
-      >
-        <p className="text-lg italic">{revealText}</p>
-      </div>
+    <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+      {children}
       {!revealed && (
         <canvas
           ref={canvasRef}
-          className="absolute inset-0 h-full w-full touch-none cursor-crosshair"
+          className="absolute inset-0 z-10 h-full w-full touch-none cursor-crosshair"
           onPointerDown={(e) => {
             scratching.current = true;
             e.currentTarget.setPointerCapture(e.pointerId);

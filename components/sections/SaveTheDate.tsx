@@ -1,6 +1,7 @@
 "use client";
 
 import { SectionShell } from "@/components/ui/SectionShell";
+import { ScratchCard } from "@/components/ui/ScratchCard";
 import { useCountdown } from "@/hooks/useCountdown";
 import { padTwo } from "@/lib/countdown";
 import { site } from "@/lib/site";
@@ -17,18 +18,23 @@ function CountdownBox({ value, label }: { value: string; label: string }) {
 }
 
 export function SaveTheDate() {
-  const { saveTheDate } = site;
+  const { saveTheDate, scratch } = site;
   const { days, hours, minutes, seconds } = useCountdown(saveTheDate.countdownTarget);
 
   return (
     <SectionShell className="invite-texture bg-cream">
       <div className="mx-auto max-w-md text-center">
-        <div className="rounded-2xl border-2 border-gold/60 bg-white/50 px-4 py-6">
-          <p className="font-caps text-[10px] tracking-[0.3em] text-text-muted">
-            {saveTheDate.heading}
-          </p>
-          <p className="mt-2 font-script text-3xl text-burgundy">{saveTheDate.dates}</p>
-        </div>
+        <ScratchCard
+          label={scratch.label}
+          className="rounded-2xl shadow-md"
+        >
+          <div className="rounded-2xl border-2 border-gold/60 bg-white/50 px-4 py-6">
+            <p className="font-caps text-[10px] tracking-[0.3em] text-text-muted">
+              {saveTheDate.heading}
+            </p>
+            <p className="mt-2 font-script text-3xl text-burgundy">{saveTheDate.dates}</p>
+          </div>
+        </ScratchCard>
         <div className="mt-6 flex gap-2">
           <CountdownBox value={padTwo(days)} label="DAYS" />
           <CountdownBox value={padTwo(hours)} label="HOURS" />
