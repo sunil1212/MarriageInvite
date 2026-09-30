@@ -2,7 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from "react";
 
+/** When this share of the card is scratched, remove overlay entirely. */
 const REVEAL_THRESHOLD = 0.3;
+const BRUSH_RADIUS = 24;
+const BRUSH_AREA = Math.PI * BRUSH_RADIUS * BRUSH_RADIUS;
 
 type ScratchCardProps = {
   label: string;
@@ -16,6 +19,15 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
   const [revealed, setRevealed] = useState(false);
   const scratching = useRef(false);
   const sizeRef = useRef({ width: 0, height: 0 });
+  const scratchedAreaRef = useRef(0);
+  const revealedRef = useRef(false);
+
+  const revealAll = useCallback(() => {
+    if (revealedRef.current) return;
+    revealedRef.current = true;
+    scratching.current = false;
+    setRevealed(true);
+  }, []);
 
   const drawOverlay = useCallback(
     (ctx: CanvasRenderingContext2D, width: number, height: number) => {
@@ -38,7 +50,7 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
   const syncCanvas = useCallback(() => {
     const container = containerRef.current;
     const canvas = canvasRef.current;
-    if (!container || !canvas || revealed) return;
+    if (!container || !canvas || revealedRef.current) return;
 
     const { width, height } = container.getBoundingClientRect();
     const w = Math.round(width);
@@ -51,7 +63,7 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     drawOverlay(ctx, w, h);
-  }, [drawOverlay, revealed]);
+  }, [drawOverlay]);
 
   useEffect(() => {
     syncCanvas();
@@ -63,24 +75,39 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
     return () => observer.disconnect();
   }, [syncCanvas]);
 
+  const measureScratchedRatio = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const data = imageData.data;
+    const totalPixels = width * height;
+    let cleared = 0;
+    for (let i = 3; i < data.length; i += 4) {
+      if (data[i] < 64) cleared++;
+    }
+    return cleared / totalPixels;
+  };
+
   const scratch = (x: number, y: number) => {
+    if (revealedRef.current) return;
     const canvas = canvasRef.current;
-    if (!canvas || revealed) return;
+    if (!canvas) return;
     const { width, height } = sizeRef.current;
+    if (width < 1 || height < 1) return;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
+
+    scratchedAreaRef.current += BRUSH_AREA;
+
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 22, 0, Math.PI * 2);
+    ctx.arc(x, y, BRUSH_RADIUS, 0, Math.PI * 2);
     ctx.fill();
 
-    const imageData = ctx.getImageData(0, 0, width, height);
-    let cleared = 0;
-    for (let i = 3; i < imageData.data.length; i += 4) {
-      if (imageData.data[i] === 0) cleared++;
-    }
-    if (cleared / (width * height) > REVEAL_THRESHOLD) {
-      setRevealed(true);
+    const pixelRatio = measureScratchedRatio(ctx, width, height);
+    const areaRatio = Math.min(1, scratchedAreaRef.current / (width * height));
+
+    if (pixelRatio > REVEAL_THRESHOLD || areaRatio > REVEAL_THRESHOLD) {
+      revealAll();
     }
   };
 
@@ -103,20 +130,26 @@ export function ScratchCard({ label, children, className = "" }: ScratchCardProp
           ref={canvasRef}
           className="absolute inset-0 z-10 h-full w-full touch-none cursor-crosshair"
           onPointerDown={(e) => {
+            if (revealedRef.current) return;
             scratching.current = true;
             e.currentTarget.setPointerCapture(e.pointerId);
             const { x, y } = pointerPos(e);
             scratch(x, y);
           }}
           onPointerMove={(e) => {
-            if (!scratching.current) return;
+            if (!scratching.current || revealedRef.current) return;
             const { x, y } = pointerPos(e);
             scratch(x, y);
           }}
-          onPointerUp={() => {
+          onPointerUp={(e) => {
             scratching.current = false;
+            try {
+              e.currentTarget.releasePointerCapture(e.pointerId);
+            } catch {
+              /* already released */
+            }
           }}
-          onPointerLeave={() => {
+          onPointerCancel={() => {
             scratching.current = false;
           }}
         />
